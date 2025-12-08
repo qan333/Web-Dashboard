@@ -1,13 +1,19 @@
-// Header.jsx
-export default function Header({ onFavorite, onConnectWallet, walletAddress }) {
+// src/components/Header.jsx
+export default function Header({
+  onFavorite,
+  onConnectWallet,
+  walletAddress,
+  pageTitle,
+  pageSubtitle
+}) {
   const shortAddr = (addr) =>
     addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : ''
 
   return (
     <header className="header">
       <div className="header-left">
-        <h1>Wallet scoring</h1>
-        <p>Enter a wallet address to check health and risk.</p>
+        <h1>{pageTitle}</h1>
+        <p>{pageSubtitle}</p>
       </div>
       <div className="header-right">
         <button
@@ -29,7 +35,7 @@ export default function Header({ onFavorite, onConnectWallet, walletAddress }) {
         <button
           className="btn-connect"
           onClick={onConnectWallet}
-          title={walletAddress ? walletAddress : 'Connect wallet'}
+          title={walletAddress || 'Connect wallet'}
         >
           {walletAddress ? shortAddr(walletAddress) : 'Connect wallet'}
         </button>

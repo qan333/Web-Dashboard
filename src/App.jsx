@@ -27,6 +27,15 @@ function App() {
     }
   })
 
+  const [reports, setReports] = useState(() => {
+    try {
+      const saved = localStorage.getItem('scamradar_reports')
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
+  })
+
   const isValidEthAddress = (address) => /^0x[a-fA-F0-9]{40}$/.test(address)
 
   const showAlert = (message, type = 'info') => {
@@ -178,7 +187,18 @@ function App() {
     })
   }
 
-  // ===== ROUTING GIỮA CÁC PAGE =====
+  const addReport = (report) => {
+    setReports((prev) => {
+      const next = [...prev, report]
+      try {
+        localStorage.setItem('scamradar_reports', JSON.stringify(next))
+      } catch {}
+      showAlert('Report saved.', 'success')
+      return next
+    })
+  }
+
+  // ===== CHỌN PAGE =====
   const renderPage = () => {
     switch (activePage) {
       case 'wallet':
@@ -193,13 +213,39 @@ function App() {
       case 'approval':
         return <ApprovalAuditPage />
       case 'tx-monitor':
-        return <TransactionMonitorPage />
+        return (
+          <TransactionMonitorPage
+            currentAddress={walletData?.address || connectedWallet}
+            onCreateReport={addReport}
+          />
+        )
       case 'alerts':
-        return <AlertTrackerPage />
+        return <AlertTrackerPage reports={reports} />
       default:
         return null
     }
   }
+
+  const PAGE_META = {
+    wallet: {
+      title: 'Wallet scoring',
+      subtitle: 'Enter a wallet address to check health and risk.',
+    },
+    'approval': {
+      title: 'Approval audit',
+      subtitle: 'Review ERC20 / NFT approvals and detect over-privileged spenders.',
+    },
+    'tx-monitor': {
+      title: 'Transaction monitor',
+      subtitle: 'Inspect transaction history and detect abnormal patterns.',
+    },
+    'alerts': {
+      title: 'Alert tracker',
+      subtitle: 'Manage saved reports and historical alerts.',
+    },
+  }
+
+  const { title, subtitle } = PAGE_META[activePage] ?? PAGE_META.wallet
 
   return (
     <div className="container">
@@ -210,6 +256,8 @@ function App() {
           onFavorite={() => walletData && toggleFavorite(walletData.address)}
           onConnectWallet={connectWallet}
           walletAddress={connectedWallet}
+          pageTitle={title}
+          pageSubtitle={subtitle}
         />
 
         {renderPage()}
@@ -220,6 +268,7 @@ function App() {
       )}
     </div>
   )
+
 }
 
 export default App

@@ -1,9 +1,11 @@
+// src/components/Sidebar.jsx
 import { useState } from 'react'
 import logoImage from '../assets/logo.png';
 
 export default function Sidebar({ activePage, onChangePage }) {
   const [theme, setTheme] = useState(false)
 
+  // CHÚ Ý: id phải trùng với các case trong App.jsx: wallet, approval, tx-monitor, alerts
   const navItems = [
     { id: 'wallet', label: 'Wallet scoring', icon: 'wallet' },
     { id: 'approval', label: 'Approval audit', icon: 'check' },

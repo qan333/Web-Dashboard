@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import logoImage from '../assets/logo.png';
 
 export default function Sidebar() {
   const [theme, setTheme] = useState(false)
@@ -19,9 +20,13 @@ export default function Sidebar() {
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="logo-box">
-          <span className="logo-icon">W</span>
+          <img 
+            src={logoImage} 
+            alt="Logo ScamRadar" 
+            className="logo-icon" 
+          />
         </div>
-        <span className="sidebar-title">WEB3 ANTIVIRUS</span>
+        <span className="sidebar-title">Scam Radar</span>
       </div>
 
       <nav className="sidebar-nav">

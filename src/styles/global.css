@@ -76,7 +76,7 @@ body {
     width: 48px;
     height: 48px;
     background: linear-gradient(135deg, #ffc107 0%, #ffdb4d 100%);
-    border-radius: 12px;
+    border-radius: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -84,13 +84,15 @@ body {
 }
 
 .logo-icon {
-    font-size: 24px;
-    font-weight: 800;
-    color: white;
+  width: 50px; 
+  height: 50px;
+  border-radius: 50px;
+  margin: 2px;
+  margin-bottom: 3px;
 }
 
 .sidebar-title {
-    font-size: 0.75rem;
+    font-size: 1.75rem;
     font-weight: 800;
     letter-spacing: 2px;
     color: #ffc107;

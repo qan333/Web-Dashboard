@@ -1,6 +1,7 @@
 // src/components/Sidebar.jsx
 import { useState } from 'react'
 import logoImage from '../assets/logo.png';
+import '../styles/sidebar.css'
 
 export default function Sidebar({ activePage, onChangePage }) {
   const [theme, setTheme] = useState(false)

@@ -1,4 +1,6 @@
 // src/components/Header.jsx
+import '../styles/header.css'
+
 export default function Header({
   onFavorite,
   onConnectWallet,

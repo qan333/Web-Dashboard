@@ -1,14 +1,42 @@
 import { useEffect, useState } from 'react'
 import { fetchAccountTransactions } from '../services/api'
+import '../styles/tx-alert.css'
 
-export default function TransactionMonitorPage({ currentAddress, onCreateReport }) {
+/**
+ * Props:
+ *  - currentAddress: ví hiện tại
+ *  - cachedTx: object cache từ App (key: `${address}-${page}`)
+ *  - onCacheTx(address, page, txs): callback để lưu cache lên App
+ *  - onCreateReport(report): lưu report cho AlertTracker
+ */
+export default function TransactionMonitorPage({
+  currentAddress,
+  cachedTx = {},
+  onCacheTx,
+  onCreateReport,
+}) {
   const [txs, setTxs] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [page, setPage] = useState(1)
 
+  // Đổi ví thì reset về page 1
+  useEffect(() => {
+    setPage(1)
+  }, [currentAddress])
+
   useEffect(() => {
     if (!currentAddress) return
+
+    const key = `${currentAddress}-${page}`
+    const cached = cachedTx[key]
+
+    // Nếu đã có cache cho ví + page này → dùng luôn
+    if (cached) {
+      setTxs(cached)
+      setError(null)
+      return
+    }
 
     const load = async () => {
       setLoading(true)
@@ -16,16 +44,16 @@ export default function TransactionMonitorPage({ currentAddress, onCreateReport 
       try {
         const data = await fetchAccountTransactions(currentAddress, {
           page,
-          limit: 50
+          limit: 50,
         })
 
         const list = data.transactions || data || []
         setTxs(list)
+        onCacheTx?.(currentAddress, page, list)
       } catch (err) {
         console.error(err)
-        const msg = err.message || ''
-        // Nếu backend vẫn trả 502/“No transactions found” thì coi như list rỗng
-        if (msg.toLowerCase().includes('no transactions found')) {
+        const msg = (err.message || '').toLowerCase()
+        if (msg.includes('no transactions found')) {
           setTxs([])
           setError(null)
         } else {
@@ -37,10 +65,11 @@ export default function TransactionMonitorPage({ currentAddress, onCreateReport 
     }
 
     load()
-  }, [currentAddress, page])
+  }, [currentAddress, page]) // <-- chỉ phụ thuộc address + page
+
 
   const handleCreateReport = () => {
-    if (!currentAddress || !txs.length) return
+    if (!currentAddress || !txs.length || !onCreateReport) return
 
     const withRisk = txs.filter((tx) => typeof tx.risk_score === 'number')
 
@@ -52,7 +81,9 @@ export default function TransactionMonitorPage({ currentAddress, onCreateReport 
       incoming: txs.filter((tx) => tx.direction === 'in').length,
       outgoing: txs.filter((tx) => tx.direction === 'out').length,
       highRisk: withRisk.filter((tx) => tx.risk_score >= 0.7).length,
-      mediumRisk: withRisk.filter((tx) => tx.risk_score >= 0.3 && tx.risk_score < 0.7).length,
+      mediumRisk: withRisk.filter(
+        (tx) => tx.risk_score >= 0.3 && tx.risk_score < 0.7
+      ).length,
       lowRisk: withRisk.filter((tx) => tx.risk_score < 0.3).length,
     }
 
@@ -60,10 +91,8 @@ export default function TransactionMonitorPage({ currentAddress, onCreateReport 
   }
 
   const shortHash = (h) => (h ? `${h.slice(0, 6)}...${h.slice(-4)}` : '')
-  const formatDate = (ts) =>
-    ts ? new Date(ts * 1000).toLocaleString() : '-'
-  const formatEth = (v) =>
-    v == null ? '-' : Number(v).toFixed(4)
+  const formatDate = (ts) => (ts ? new Date(ts * 1000).toLocaleString() : '-')
+  const formatEth = (v) => (v == null ? '-' : Number(v).toFixed(4))
 
   if (!currentAddress) {
     return (
@@ -72,10 +101,12 @@ export default function TransactionMonitorPage({ currentAddress, onCreateReport 
           <div className="card-header">
             <h3>Transaction monitor</h3>
           </div>
-          <p>
-            No wallet selected. Please connect a wallet or analyze a wallet on
-            the <strong>Wallet scoring</strong> page first.
-          </p>
+          <div className="card-body">
+            <p>
+              No wallet selected. Please connect a wallet or analyze a wallet on
+              the <strong>Wallet scoring</strong> page first.
+            </p>
+          </div>
         </section>
       </div>
     )
@@ -88,10 +119,7 @@ export default function TransactionMonitorPage({ currentAddress, onCreateReport 
           <div>
             <h3>Transaction monitor</h3>
             <p className="muted">
-              Address:{' '}
-              <span className="accent">
-                {currentAddress}
-              </span>
+              Address: <span className="accent">{currentAddress}</span>
             </p>
           </div>
 
@@ -122,49 +150,55 @@ export default function TransactionMonitorPage({ currentAddress, onCreateReport 
           </div>
         </div>
 
-        {loading && <p>Loading transactions...</p>}
-        {error && <p className="text-error">{error}</p>}
+        <div className="card-body">
+          {loading && <p>Loading transactions...</p>}
+          {error && <p className="text-error">{error}</p>}
 
-        {!loading && !error && !txs.length && (
-          <p>No transactions found for this wallet.</p>
-        )}
+          {!loading && !error && !txs.length && (
+            <p>No transactions found for this wallet.</p>
+          )}
 
-        {!!txs.length && (
-          <div className="tx-table-wrapper">
-            <table className="tx-table">
-              <thead>
-                <tr>
-                  <th>Hash</th>
-                  <th>Time</th>
-                  <th>Direction</th>
-                  <th>From</th>
-                  <th>To</th>
-                  <th>Value (ETH)</th>
-                  <th>Risk</th>
-                </tr>
-              </thead>
-              <tbody>
-                {txs.map((tx) => (
-                  <tr key={tx.hash}>
-                    <td title={tx.hash}>{shortHash(tx.hash)}</td>
-                    <td>{formatDate(tx.timestamp)}</td>
-                    <td className={tx.direction === 'out' ? 'tx-out' : 'tx-in'}>
-                      {tx.direction === 'out' ? 'Outgoing' : 'Incoming'}
-                    </td>
-                    <td title={tx.from}>{shortHash(tx.from)}</td>
-                    <td title={tx.to}>{shortHash(tx.to)}</td>
-                    <td>{formatEth(tx.value_eth)}</td>
-                    <td>
-                      {typeof tx.risk_score === 'number'
-                        ? `${(tx.risk_score * 100).toFixed(1)}%`
-                        : '—'}
-                    </td>
+          {!!txs.length && (
+            <div className="tx-table-wrapper">
+              <table className="tx-table">
+                <thead>
+                  <tr>
+                    <th>Hash</th>
+                    <th>Time</th>
+                    <th>Direction</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Value (ETH)</th>
+                    <th>Risk</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                </thead>
+                <tbody>
+                  {txs.map((tx) => (
+                    <tr key={tx.hash}>
+                      <td title={tx.hash}>{shortHash(tx.hash)}</td>
+                      <td>{formatDate(tx.timestamp)}</td>
+                      <td
+                        className={
+                          tx.direction === 'out' ? 'tx-out' : 'tx-in'
+                        }
+                      >
+                        {tx.direction === 'out' ? 'Outgoing' : 'Incoming'}
+                      </td>
+                      <td title={tx.from}>{shortHash(tx.from)}</td>
+                      <td title={tx.to}>{shortHash(tx.to)}</td>
+                      <td>{formatEth(tx.value_eth)}</td>
+                      <td>
+                        {typeof tx.risk_score === 'number'
+                          ? `${(tx.risk_score * 100).toFixed(1)}%`
+                          : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </section>
     </div>
   )

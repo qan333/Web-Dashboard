@@ -1,3 +1,5 @@
+import '../styles/cards.css'
+
 export default function ValueAtRisk({ data }) {
   const formatNumber = (num) => {
     if (!num) return '0.00'

@@ -8,7 +8,9 @@ import WalletScoringPage from './pages/WalletScoringPage'
 import ApprovalAuditPage from './pages/ApprovalAuditPage'
 import TransactionMonitorPage from './pages/TransactionMonitorPage'
 import AlertTrackerPage from './pages/AlertTrackerPage'
-import './styles/global.css'
+import './styles/base.css'
+import './styles/layout.css'
+import './styles/cards.css'
 
 function App() {
   const [activePage, setActivePage] = useState('wallet')
@@ -17,6 +19,7 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [alert, setAlert] = useState(null)
   const [connectedWallet, setConnectedWallet] = useState(null)
+  const [txCache, setTxCache] = useState({}) 
 
   const [favorites, setFavorites] = useState(() => {
     try {
@@ -198,6 +201,12 @@ function App() {
     })
   }
 
+  // Đơn giản hoá, chỉ cache theo address + page
+  const handleCacheTransactions = (address, page, txs) => {
+    const key = `${address}-${page}`
+    setTxCache(prev => ({ ...prev, [key]: txs }))
+  }
+
   // ===== CHỌN PAGE =====
   const renderPage = () => {
     switch (activePage) {
@@ -211,11 +220,17 @@ function App() {
           />
         )
       case 'approval':
-        return <ApprovalAuditPage />
+        return (
+          <ApprovalAuditPage
+            currentAddress={connectedWallet || walletData?.address}
+          />
+        )
       case 'tx-monitor':
         return (
           <TransactionMonitorPage
-            currentAddress={walletData?.address || connectedWallet}
+            currentAddress={connectedWallet || walletData?.address}
+            cachedTx={txCache}
+            onCacheTx={handleCacheTransactions}
             onCreateReport={addReport}
           />
         )
@@ -246,6 +261,8 @@ function App() {
   }
 
   const { title, subtitle } = PAGE_META[activePage] ?? PAGE_META.wallet
+
+  
 
   return (
     <div className="container">

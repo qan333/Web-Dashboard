@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import '../styles/cards.css'   // đã có health-overview ở trong đó
 
 export default function HealthOverview({ data }) {
   const [rotation, setRotation] = useState(0)

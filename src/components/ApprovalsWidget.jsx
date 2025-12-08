@@ -1,3 +1,5 @@
+import '../styles/approvals.css'
+
 export default function ApprovalsWidget({ data }) {
   return (
     <section className="card card-approvals-summary">

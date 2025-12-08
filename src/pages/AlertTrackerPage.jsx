@@ -1,3 +1,5 @@
+import '../styles/tx-alert.css'
+
 export default function AlertTrackerPage({ reports = [] }) {
   const hasReports = reports.length > 0
 
@@ -25,50 +27,51 @@ export default function AlertTrackerPage({ reports = [] }) {
             for your thesis / analysis.
           </p>
         </div>
+        <div className="card-body">
+          {!hasReports && <p>No reports saved yet.</p>}
 
-        {!hasReports && <p>No reports saved yet.</p>}
-
-        {hasReports && (
-          <div className="report-table-wrapper">
-            <table className="report-table">
-              <thead>
-                <tr>
-                  <th>Address</th>
-                  <th>Created at</th>
-                  <th>Total tx</th>
-                  <th>In</th>
-                  <th>Out</th>
-                  <th>High risk</th>
-                  <th>Medium</th>
-                  <th>Low</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {reports.map((r) => (
-                  <tr key={r.id}>
-                    <td className="accent">{r.address}</td>
-                    <td>{new Date(r.createdAt).toLocaleString()}</td>
-                    <td>{r.totalTx}</td>
-                    <td>{r.incoming}</td>
-                    <td>{r.outgoing}</td>
-                    <td>{r.highRisk}</td>
-                    <td>{r.mediumRisk}</td>
-                    <td>{r.lowRisk}</td>
-                    <td>
-                      <button
-                        className="action-btn"
-                        onClick={() => downloadJson(r)}
-                      >
-                        Download JSON
-                      </button>
-                    </td>
+          {hasReports && (
+            <div className="report-table-wrapper">
+              <table className="report-table">
+                <thead>
+                  <tr>
+                    <th>Address</th>
+                    <th>Created at</th>
+                    <th>Total tx</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th>High risk</th>
+                    <th>Medium</th>
+                    <th>Low</th>
+                    <th></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                </thead>
+                <tbody>
+                  {reports.map((r) => (
+                    <tr key={r.id}>
+                      <td className="accent">{r.address}</td>
+                      <td>{new Date(r.createdAt).toLocaleString()}</td>
+                      <td>{r.totalTx}</td>
+                      <td>{r.incoming}</td>
+                      <td>{r.outgoing}</td>
+                      <td>{r.highRisk}</td>
+                      <td>{r.mediumRisk}</td>
+                      <td>{r.lowRisk}</td>
+                      <td>
+                        <button
+                          className="action-btn"
+                          onClick={() => downloadJson(r)}
+                        >
+                          Download JSON
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </section>
     </div>
   )

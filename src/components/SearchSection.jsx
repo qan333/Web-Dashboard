@@ -1,5 +1,7 @@
 // SearchSection.jsx
 import { useEffect, useState } from 'react'
+import '../styles/search.css'
+
 
 export default function SearchSection({ onSearch, loading, defaultWalletAddress }) {
   const [walletAddress, setWalletAddress] = useState('')
@@ -30,13 +32,13 @@ export default function SearchSection({ onSearch, loading, defaultWalletAddress 
           </svg>
           <input
             type="text"
-            className="wallet-input"
+            className="wallet-input"s
             placeholder="Search by ETH address"
             value={walletAddress}
             onChange={(e) => setWalletAddress(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-          <select
+          {/* <select
             className="network-select"
             value={network}
             onChange={(e) => setNetwork(e.target.value)}
@@ -44,7 +46,7 @@ export default function SearchSection({ onSearch, loading, defaultWalletAddress 
             <option value="ethereum">Ethereum network</option>
             <option value="bsc">BSC Network</option>
             <option value="polygon">Polygon Network</option>
-          </select>
+          </select> */}
         </div>
         <button className="btn-search" onClick={handleSearch} disabled={loading}>
           {loading ? <span className="spinner"></span> : 'Search'}

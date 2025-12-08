@@ -1,3 +1,5 @@
+import '../styles/flagged-assets.css'
+
 export default function FlaggedAssets({ data }) {
   return (
     <section className="card card-flagged-assets">

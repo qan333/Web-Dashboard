@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import logoImage from '../assets/logo.png';
 
-export default function Sidebar() {
+export default function Sidebar({ activePage, onChangePage }) {
   const [theme, setTheme] = useState(false)
 
   const navItems = [
-    { label: 'Wallet scoring', icon: 'wallet' },
-    { label: 'Approval audit', icon: 'check' },
-    { label: 'Transaction monitor', icon: 'transaction' },
-    { label: 'Alert tracker', icon: 'alert' }
+    { id: 'wallet', label: 'Wallet scoring', icon: 'wallet' },
+    { id: 'approval', label: 'Approval audit', icon: 'check' },
+    { id: 'tx-monitor', label: 'Transaction monitor', icon: 'transaction' },
+    { id: 'alerts', label: 'Alert tracker', icon: 'alert' }
   ]
 
   const footerItems = [
@@ -30,30 +30,30 @@ export default function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        {navItems.map((item, idx) => (
-          <a
-            key={idx}
-            href="#"
-            className={`nav-item ${idx === 0 ? 'active' : ''}`}
-            onClick={(e) => e.preventDefault()}
+        {navItems.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className={`nav-item ${activePage === item.id ? 'active' : ''}`}
+            onClick={() => onChangePage(item.id)}
           >
             <SVGIcon icon={item.icon} />
             <span>{item.label}</span>
-          </a>
+          </button>
         ))}
       </nav>
 
       <div className="sidebar-footer">
         {footerItems.map((item, idx) => (
-          <a
+          <button
             key={idx}
-            href="#"
+            type="button"
             className="nav-item"
-            onClick={(e) => e.preventDefault()}
+            onClick={() => {}}
           >
             <SVGIcon icon={item.icon} />
             <span>{item.label}</span>
-          </a>
+          </button>
         ))}
 
         <div className="theme-toggle">

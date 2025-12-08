@@ -1,17 +1,23 @@
-import { useState } from 'react'
+// SearchSection.jsx
+import { useEffect, useState } from 'react'
 
-export default function SearchSection({ onSearch, loading }) {
+export default function SearchSection({ onSearch, loading, defaultWalletAddress }) {
   const [walletAddress, setWalletAddress] = useState('')
   const [network, setNetwork] = useState('ethereum')
+
+  // Khi connect ví xong, auto-fill vào ô search
+  useEffect(() => {
+    if (defaultWalletAddress) {
+      setWalletAddress(defaultWalletAddress)
+    }
+  }, [defaultWalletAddress])
 
   const handleSearch = () => {
     onSearch(walletAddress, network)
   }
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch()
-    }
+    if (e.key === 'Enter') handleSearch()
   }
 
   return (

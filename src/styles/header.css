@@ -50,14 +50,14 @@
 }
 
 .btn-favorite:hover {
-  border-color: #ffc107;
-  color: #ffc107;
+  border-color: var(--primary-light);
+  color: var(--primary-light);
   background: rgba(255, 193, 7, 0.05);
 }
 
 .btn-connect {
-  background: linear-gradient(135deg, #ffc107 0%, #ffdb4d 100%);
-  color: #1a1a1a;
+  background: linear-gradient(135deg, var(--primary-light)7 0%, var(--primary-color) 100%);
+  color: var(--bg-secondary);
   border: none;
   padding: 0.75rem 1.75rem;
   border-radius: 8px;
@@ -88,7 +88,7 @@
 
 .btn-connect--connected {
   background: #212529;
-  border: 1px solid #ffc107;
-  color: #ffc107;
+  border: 1px solid var(--primary-light);
+  color: var(--primary-light);
 }
 

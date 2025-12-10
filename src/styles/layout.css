@@ -60,8 +60,8 @@
 }
 
 .tab-btn.active {
-  background: linear-gradient(135deg, #ffc107 0%, #ffdb4d 100%);
-  color: #1a1a1a;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+  color: var(--bg-secondary);
 }
 
 /* Responsive */

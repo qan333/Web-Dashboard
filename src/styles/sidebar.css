@@ -1,6 +1,6 @@
 .sidebar {
   width: 260px;
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   border-right: 1px solid var(--border-color);
   padding: 2rem 1.5rem;
   overflow-y: auto;
@@ -22,7 +22,7 @@
 .logo-box {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #ffc107 0%, #ffdb4d 100%);
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
   border-radius: 50px;
   display: flex;
   align-items: center;
@@ -34,15 +34,14 @@
   width: 50px;
   height: 50px;
   border-radius: 50px;
-  margin: 2px;
-  margin-bottom: 3px;
+  
 }
 
 .sidebar-title {
-  font-size: 1.75rem;
+  font-size: 1.50rem;
   font-weight: 800;
   letter-spacing: 2px;
-  color: #ffc107;
+  color: var(--primary-light);
 }
 
 /* Sidebar Navigation */
@@ -71,13 +70,13 @@
 
 .nav-item:hover {
   background: rgba(255, 193, 7, 0.1);
-  color: #ffc107;
+  color: var(--primary-light);
 }
 
 .nav-item.active {
   background: rgba(255, 193, 7, 0.15);
-  color: #ffc107;
-  border-left: 3px solid #ffc107;
+  color: var(--primary-light);
+  border-left: 3px solid var(--primary-light);
   padding-left: calc(1rem - 3px);
 }
 

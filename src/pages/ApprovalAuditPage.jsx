@@ -103,7 +103,7 @@ export default function ApprovalAuditPage({ currentAddress }) {
         <div className="card-header tx-card-header">
           <div>
             <h3>Approval audit</h3>
-            <p className="muted">
+            <p className="muted-1">
               Address: <span className="accent">{currentAddress}</span>
             </p>
           </div>

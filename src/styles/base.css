@@ -36,6 +36,15 @@
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
   --transition: all 0.3s ease;
+
+  --card-body-bg: #020617; /* thân card */
+  --card-header-bg: radial-gradient(
+      circle at top left,
+      rgba(34, 211, 238, 0.28),  /* cyan highlight */
+      transparent 55%
+    ),
+    #020617;                     /* nền tối phía dưới */
+  --card-header-border: rgba(15, 23, 42, 0.9);
 }
 
 /* ==== LIGHT THEME – cyan accent ==== */
@@ -64,6 +73,10 @@
   --border-color: #d1d5db;
   --shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
   --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.08);
+
+  --card-body-bg: #ffffff;
+  --card-header-bg: linear-gradient(135deg, #e0f7ff 100%, #c7ebff 0%);
+  --card-header-border: rgba(148, 163, 184, 0.8);
 }
 
 /* Body dùng biến background & text mới */

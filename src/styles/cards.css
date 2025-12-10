@@ -1,5 +1,5 @@
 .card {
-  background: var(--bg-secondary);
+  background: var(--card-body-bg);
   border: 1px solid var(--border-color);
   border-radius: 16px;
   overflow: hidden;
@@ -9,15 +9,15 @@
 }
 
 .card:hover {
-  border-color: #ffc107;
+  border-color: var(--primary-light);
   transform: translateY(-4px);
   box-shadow: 0 12px 24px rgba(255, 193, 7, 0.1);
 }
 
 .card-header {
   padding: 1.25rem;
-  border-bottom: 1px solid var(--border-color);
-  background: linear-gradient(135deg, #3a3a3a 0%, #323232 100%);
+  border-bottom: 1px solid var(--card-header-border);
+  background: var(--card-header-bg);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -45,7 +45,7 @@
 .currency {
   font-size: 1.75rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #ffc107 0%, #ffdb4d 100%);
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -79,12 +79,18 @@
 
 /* Health overview card */
 .card-health-overview {
-  background: linear-gradient(135deg, #1a1f36 0%, #2d3748 100%) !important;
+  background: linear-gradient(
+    135deg,
+    #022c3a 0%,    /* teal đậm */
+    #0f172a 40%,
+    #1e293b 100%
+  ) !important;
   color: white;
   padding: 2rem;
   border-radius: 16px;
   border: none !important;
 }
+
 
 .health-overview-content h3 {
   font-size: 1.25rem;

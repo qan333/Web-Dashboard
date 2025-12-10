@@ -22,7 +22,7 @@ export default function AlertTrackerPage({ reports = [] }) {
       <section className="card card-alert-tracker">
         <div className="card-header">
           <h3>Report manager</h3>
-          <p className="muted">
+          <p className="muted-1">
             Reports are saved locally in your browser (localStorage). Use them
             for your thesis / analysis.
           </p>

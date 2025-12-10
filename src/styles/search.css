@@ -39,7 +39,7 @@
 }
 
 .search-input-group:focus-within {
-  border-color: #ffc107;
+  border-color: var(--primary-light);
 }
 
 .search-icon {
@@ -73,8 +73,8 @@
 }
 
 .btn-search {
-  background: #ffc107;
-  color: #1a1a1a;
+  background: var(--primary-color);
+  color: #0f172a;            /* chữ đậm hơn, vẫn đọc được trên nền cyan */
   border: none;
   padding: 0.75rem 2rem;
   border-radius: 8px;
@@ -85,7 +85,7 @@
 }
 
 .btn-search:hover:not(:disabled) {
-  background: #ffdb4d;
+  background: var(--primary-light);
   transform: translateY(-2px);
 }
 
@@ -116,8 +116,8 @@
 }
 
 .action-btn:hover {
-  border-color: #ffc107;
-  color: #ffc107;
+  border-color: var(--primary-light);
+  color: var(--primary-light);
   background: rgba(255, 193, 7, 0.05);
 }
 

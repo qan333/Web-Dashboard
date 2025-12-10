@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchAccountTransactions, detectTransactionByHash } from '../services/api'
+import CopyButton from '../components/CopyButton'
 import '../styles/tx-alert.css'
 
 /**
@@ -46,7 +47,7 @@ export default function TransactionMonitorPage({
       try {
         const data = await fetchAccountTransactions(currentAddress, {
           page,
-          limit: 50,
+          limit: 10,
         })
 
         const list = data.transactions || data || []
@@ -155,7 +156,7 @@ export default function TransactionMonitorPage({
         <div className="card-header tx-card-header">
           <div>
             <h3>Transaction monitor</h3>
-            <p className="muted">
+            <p className="muted-1">
               Address: <span className="accent">{currentAddress}</span>
             </p>
           </div>
@@ -212,7 +213,10 @@ export default function TransactionMonitorPage({
                 <tbody>
                   {txs.map((tx) => (
                     <tr key={tx.hash}>
-                      <td>{shortHash(tx.hash)}</td>
+                      <td className="accent">
+                        <span className="hash-text accent">{shortHash(tx.hash)}</span>
+                        <CopyButton text={tx.hash} />
+                      </td>
                       <td>{formatDate(tx.timestamp)}</td>
                       <td>
                         <span className={tx.direction === 'out' ? 'tx-out' : 'tx-in'}>

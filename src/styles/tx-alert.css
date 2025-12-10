@@ -21,6 +21,7 @@
 .tx-page-label {
   font-size: 0.85rem;
   opacity: 0.8;
+  color: aliceblue;
 }
 
 /* Tables */
@@ -62,8 +63,17 @@
   font-size: 0.85rem;
 }
 
+.muted-1 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  opacity: 0.9;     /* hoặc 1 nếu bạn muốn rõ hơn */
+}
+
+
+
+
 .accent {
-  color: rgb(201, 162, 57);
+  color: rgb(255, 187, 0);
 }
 
 /* Nút Analyze trong cột Risk */
@@ -80,7 +90,7 @@
 
 .btn-analyze:hover {
   background: var(--primary-color);
-  color: #1a1a1a;
+  color: var(--bg-secondary);
   border-color: var(--primary-color);
 }
 
@@ -106,7 +116,7 @@
 
 .btn-analyze:hover {
   background: var(--primary-color);
-  color: #1a1a1a;
+  color: var(--bg-secondary);
   border-color: var(--primary-color);
 }
 
@@ -117,5 +127,49 @@
   font-size: 0.75rem;
   background: rgba(255, 193, 7, 0.1);
   border: 1px solid rgba(255, 193, 7, 0.7);
+}
+
+/* Hash cell layout + copy button */
+.hash-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.hash-text {
+  display: inline-block;
+  width: 130px;          /* chỉnh 120–140 tuỳ bạn */
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+/* Nút copy giống kiểu ChatGPT */
+.copy-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+.copy-btn.copied {
+  color: var(--success-color);
+}
+
+/* light mode vẫn đẹp */
+[data-theme='light'] .copy-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
 }
 

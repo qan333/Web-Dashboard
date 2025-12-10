@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchAccountTransactions } from '../services/api'
+import { fetchAccountTransactions, detectTransactionByHash } from '../services/api'
 import '../styles/tx-alert.css'
 
 /**
@@ -19,6 +19,8 @@ export default function TransactionMonitorPage({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [page, setPage] = useState(1)
+  const [analyzing, setAnalyzing] = useState({})
+
 
   // Đổi ví thì reset về page 1
   useEffect(() => {
@@ -89,6 +91,41 @@ export default function TransactionMonitorPage({
 
     onCreateReport(report)
   }
+  const handleAnalyzeTx = async (tx) => {
+    if (!tx?.hash) return
+
+    // Nếu đã có risk_score rồi thì không gọi lại nữa
+    if (typeof tx.risk_score === 'number') return
+
+    // Đánh dấu đang analyze transaction này
+    setAnalyzing((prev) => ({ ...prev, [tx.hash]: true }))
+
+    try {
+      const res = await detectTransactionByHash(tx.hash)
+      const prob =
+        typeof res?.transaction_scam_probability === 'number'
+          ? res.transaction_scam_probability
+          : null
+
+      // Gắn risk_score vào đúng transaction trong state
+      setTxs((prev) =>
+        prev.map((item) =>
+          item.hash === tx.hash ? { ...item, risk_score: prob } : item
+        )
+      )
+    } catch (err) {
+      console.error('Failed to analyze tx', tx.hash, err)
+      // Có thể tuỳ ý set error riêng nếu muốn hiển thị
+    } finally {
+      // Bỏ trạng thái loading cho tx này
+      setAnalyzing((prev) => {
+        const next = { ...prev }
+        delete next[tx.hash]
+        return next
+      })
+    }
+  }
+
 
   const shortHash = (h) => (h ? `${h.slice(0, 6)}...${h.slice(-4)}` : '')
   const formatDate = (ts) => (ts ? new Date(ts * 1000).toLocaleString() : '-')
@@ -169,32 +206,45 @@ export default function TransactionMonitorPage({
                     <th>From</th>
                     <th>To</th>
                     <th>Value (ETH)</th>
-                    <th>Risk</th>
+                    <th>Health</th>
                   </tr>
                 </thead>
                 <tbody>
                   {txs.map((tx) => (
                     <tr key={tx.hash}>
-                      <td title={tx.hash}>{shortHash(tx.hash)}</td>
+                      <td>{shortHash(tx.hash)}</td>
                       <td>{formatDate(tx.timestamp)}</td>
-                      <td
-                        className={
-                          tx.direction === 'out' ? 'tx-out' : 'tx-in'
-                        }
-                      >
-                        {tx.direction === 'out' ? 'Outgoing' : 'Incoming'}
-                      </td>
-                      <td title={tx.from}>{shortHash(tx.from)}</td>
-                      <td title={tx.to}>{shortHash(tx.to)}</td>
-                      <td>{formatEth(tx.value_eth)}</td>
                       <td>
-                        {typeof tx.risk_score === 'number'
-                          ? `${(tx.risk_score * 100).toFixed(1)}%`
-                          : '—'}
+                        <span className={tx.direction === 'out' ? 'tx-out' : 'tx-in'}>
+                          {tx.direction === 'out' ? 'Outgoing' : 'Incoming'}
+                        </span>
+                      </td>
+                      <td className="muted">{shortHash(tx.from)}</td>
+                      <td className="muted">{shortHash(tx.to)}</td>
+                      <td>{formatEth(tx.value_eth)}</td>
+
+                      {/* Cột Risk */}
+                      <td>
+                        {typeof tx.risk_score === 'number' ? (
+                          <span className="risk-pill">
+                            {(tx.risk_score * 100).toFixed(1)}%
+                          </span>
+                        ) : (
+                          <button
+                            className={`btn-analyze ${
+                              analyzing[tx.hash] ? 'loading' : ''
+                            }`}
+                            disabled={!!analyzing[tx.hash]}
+                            onClick={() => handleAnalyzeTx(tx)}
+                          >
+                            {analyzing[tx.hash] ? 'Analyzing…' : 'Analyze'}
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
+
               </table>
             </div>
           )}

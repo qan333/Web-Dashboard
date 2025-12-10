@@ -5,30 +5,68 @@
   box-sizing: border-box;
 }
 
+/* ==== DARK THEME (mặc định) – cyan accent ==== */
 :root {
-  --primary-color: #ffc107;
-  --primary-light: #ffdb4d;
-  --primary-dark: #e6a800;
-  --secondary-color: #ffc107;
+  color-scheme: dark;
+
+  /* Accent cyan */
+  --primary-color: #06b6d4;      /* cyan 500 */
+  --primary-light: #22d3ee;      /* cyan 300 */
+  --primary-dark: #0891b2;       /* cyan 600 */
+  --secondary-color: #06b6d4;
+
+  /* Status colors */
   --success-color: #10b981;
-  --warning-color: #ff9800;
-  --danger-color: #ff5252;
-  --info-color: #2196f3;
+  --warning-color: #f97316;
+  --danger-color: #ef4444;
+  --info-color: #0ea5e9;
 
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-tertiary: #3a3a3a;
+  /* Backgrounds (xanh đen dịu mắt) */
+  --bg-primary: #050b10;         /* body */
+  --bg-secondary: #0b1520;       /* panel lớn */
+  --bg-tertiary: #111827;        /* card, header nhỏ */
 
-  --text-primary: #ffffff;
-  --text-secondary: #b0b0b0;
-  --text-muted: #808080;
+  /* Text */
+  --text-primary: #f9fafb;
+  --text-secondary: #cbd5f5;
+  --text-muted: #6b7280;
 
-  --border-color: #404040;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  /* Borders, shadow */
+  --border-color: #1f2937;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
   --transition: all 0.3s ease;
 }
 
+/* ==== LIGHT THEME – cyan accent ==== */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --primary-color: #0284c7;      /* cyan-ish xanh dương */
+  --primary-light: #38bdf8;
+  --primary-dark: #0369a1;
+  --secondary-color: #0284c7;
+
+  --success-color: #16a34a;
+  --warning-color: #f97316;
+  --danger-color: #dc2626;
+  --info-color: #0284c7;
+
+  /* Backgrounds sáng */
+  --bg-primary: #f3f7fb;         /* body */
+  --bg-secondary: #ffffff;       /* panel */
+  --bg-tertiary: #e5edf5;        /* header, strip */
+
+  --text-primary: #0f172a;      /* rất đậm */
+  --text-secondary: #111827;   /* gần như đen */
+  --text-muted: #4b5563; 
+
+  --border-color: #d1d5db;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+/* Body dùng biến background & text mới */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
@@ -49,7 +87,7 @@ body {
   width: 1rem;
   height: 1rem;
   border: 2px solid var(--border-color);
-  border-top-color: #ffc107;
+  border-top-color: var(--primary-color); /* 🔁 dùng accent, không fix màu vàng */
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }

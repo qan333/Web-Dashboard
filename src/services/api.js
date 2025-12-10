@@ -35,7 +35,7 @@ async function get(path) {
  * Backend: POST /detect/account  
  */
 export function detectAccount(accountAddress, options = {}) {
-  return post("/detect/account", {
+  return post("/detect-bl/account", {
     account_address: accountAddress,
     explain: true,
     explain_with_llm: true,
@@ -71,21 +71,6 @@ export function fetchAccountApprovals(address, { page = 1, limit = 200 } = {}) {
 
 
 /**
- * Detect scam cho 1 transaction theo hash
- * Backend: POST /detect/transaction
- * Trả về object có field transaction_scam_probability
- */
-export function detectTransactionByHash(txHash, options = {}) {
-  return post("/detect/transaction", {
-    transaction_hash: txHash,
-    // để UI nhanh hơn: mặc định không cần SHAP / LLM
-    explain: false,
-    explain_with_llm: false,
-    ...options,
-  });
-}
-
-/**
  * Detect risk cho cả 1 page transactions và trả về list đã gắn risk_score
  * Dùng cho cột "Risk" trong TransactionMonitorPage
  */
@@ -114,4 +99,14 @@ export async function detectTransactionsRisk(address, transactions) {
     risk_score:
       riskByHash.has(tx.hash) ? riskByHash.get(tx.hash) : tx.risk_score ?? null,
   }));
+}
+
+export function detectTransactionByHash(txHash, options = {}) {
+  return post("/detect/transaction", {
+    transaction_hash: txHash,
+    // để UI nhanh hơn: mặc định không cần SHAP / LLM
+    explain: false,
+    explain_with_llm: false,
+    ...options,
+  });
 }

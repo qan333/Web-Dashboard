@@ -63,5 +63,59 @@
 }
 
 .accent {
-  color: #f5c84c;
+  color: rgb(201, 162, 57);
 }
+
+/* Nút Analyze trong cột Risk */
+.btn-analyze {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-analyze:hover {
+  background: var(--primary-color);
+  color: #1a1a1a;
+  border-color: var(--primary-color);
+}
+
+/* Badge hiển thị risk % sau khi analyze */
+.risk-pill {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.7);
+}
+/* Nút Analyze trong cột Risk */
+.btn-analyze {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-analyze:hover {
+  background: var(--primary-color);
+  color: #1a1a1a;
+  border-color: var(--primary-color);
+}
+
+/* Badge hiển thị risk % sau khi analyze */
+.risk-pill {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.7);
+}
+

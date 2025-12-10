@@ -3,13 +3,16 @@ import '../styles/header.css'
 
 export default function Header({
   onFavorite,
-  onConnectWallet,
+  onConnectWallet,   // giờ sẽ chỉ mở modal (connect / disconnect)
   walletAddress,
+  isConnecting,
   pageTitle,
-  pageSubtitle
+  pageSubtitle,
 }) {
   const shortAddr = (addr) =>
     addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : ''
+
+  const isConnected = !!walletAddress
 
   return (
     <header className="header">
@@ -17,6 +20,7 @@ export default function Header({
         <h1>{pageTitle}</h1>
         <p>{pageSubtitle}</p>
       </div>
+
       <div className="header-right">
         <button
           className="btn-favorite"
@@ -35,11 +39,22 @@ export default function Header({
         </button>
 
         <button
-          className="btn-connect"
+          className={`btn-connect ${
+            isConnected ? 'btn-connect--connected' : ''
+          }`}
           onClick={onConnectWallet}
-          title={walletAddress || 'Connect wallet'}
+          disabled={isConnecting}
+          title={
+            isConnected
+              ? `${walletAddress}\nClick to disconnect`
+              : 'Connect wallet'
+          }
         >
-          {walletAddress ? shortAddr(walletAddress) : 'Connect wallet'}
+          {isConnecting
+            ? 'Connecting...'
+            : isConnected
+            ? shortAddr(walletAddress)
+            : 'Connect wallet'}
         </button>
       </div>
     </header>

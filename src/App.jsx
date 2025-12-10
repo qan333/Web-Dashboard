@@ -8,6 +8,8 @@ import WalletScoringPage from './pages/WalletScoringPage'
 import ApprovalAuditPage from './pages/ApprovalAuditPage'
 import TransactionMonitorPage from './pages/TransactionMonitorPage'
 import AlertTrackerPage from './pages/AlertTrackerPage'
+import ConnectWalletModal from './components/ConnectWalletModal'
+import DisconnectWalletModal from './components/DisconnectWalletModal'
 import './styles/base.css'
 import './styles/layout.css'
 import './styles/cards.css'
@@ -19,7 +21,14 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [alert, setAlert] = useState(null)
   const [connectedWallet, setConnectedWallet] = useState(null)
+  const [isConnecting, setIsConnecting] = useState(false)
+  const [isConnectModalOpen, setIsConnectModalOpen] = useState(false)
+  const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false)
+
   const [txCache, setTxCache] = useState({}) 
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'dark'
+  })
 
   const [favorites, setFavorites] = useState(() => {
     try {
@@ -59,12 +68,20 @@ function App() {
       return
     }
 
+    // Nếu đã có ví đang dùng → click lần nữa thì "disconnect" (clear state frontend)
+    if (connectedWallet) {
+      setConnectedWallet(null)
+      showAlert('Disconnected wallet.', 'info')
+      return
+    }
+
     let provider = eth
     if (eth.providers && eth.providers.length) {
       provider = eth.providers.find((p) => p.isMetaMask) || eth.providers[0]
     }
 
     try {
+      setIsConnecting(true)
       const accounts = await provider.request({ method: 'eth_requestAccounts' })
       const addr = accounts?.[0]
       if (addr) {
@@ -83,24 +100,143 @@ function App() {
       } else {
         showAlert('Failed to connect wallet.', 'danger')
       }
+    } finally {
+      setIsConnecting(false)
     }
   }
 
   useEffect(() => {
     const eth = window.ethereum
-    if (!eth || !eth.on) return
+    if (!eth || !eth.request) return
 
+    // Lần đầu: scan xem đã có account nào đang được chọn không
+    const loadAccounts = async () => {
+      try {
+        const accounts = await eth.request({ method: 'eth_accounts' })
+        const addr = accounts?.[0] || null
+        if (addr) {
+          setConnectedWallet(addr)
+        }
+      } catch (err) {
+        console.error('Failed to load existing accounts', err)
+      }
+    }
+
+    loadAccounts()
+
+    // Listen khi user đổi account trong wallet
     const handler = (accounts) => {
       const addr = accounts?.[0] || null
       setConnectedWallet(addr)
-      if (addr) showAlert('Account changed in wallet.', 'info')
+      if (addr) {
+        showAlert('Account changed in wallet.', 'info')
+      } else {
+        showAlert('No account selected in wallet.', 'info')
+      }
     }
 
-    eth.on('accountsChanged', handler)
+    eth.on?.('accountsChanged', handler)
     return () => {
       eth.removeListener?.('accountsChanged', handler)
     }
   }, [])
+
+  const handleHeaderConnectClick = () => {
+    if (connectedWallet) {
+      setIsDisconnectModalOpen(true)
+    } else {
+      setIsConnectModalOpen(true)
+    }
+  }
+
+  // ===== Hàm connect theo loại ví =====
+  const connectWithWallet = async (type) => {
+    if (isConnecting) return
+
+    if (type === 'walletconnect') {
+      showAlert('WalletConnect integration is not implemented yet.', 'info')
+      return
+    }
+
+    const eth = window.ethereum
+    if (!eth) {
+      showAlert('No Web3 wallet detected. Please install MetaMask/Brave.', 'warning')
+      return
+    }
+
+    let provider = eth
+    if (eth.providers && eth.providers.length) {
+      if (type === 'metamask') {
+        provider =
+          eth.providers.find((p) => p.isMetaMask) || eth.providers[0]
+      } else if (type === 'brave') {
+        provider =
+          eth.providers.find((p) => p.isBraveWallet) || eth.providers[0]
+      } else {
+        provider = eth.providers[0]
+      }
+    }
+
+    try {
+      setIsConnecting(true)
+      const accounts = await provider.request({ method: 'eth_requestAccounts' })
+      const addr = accounts?.[0]
+      if (addr) {
+        setConnectedWallet(addr)
+        setIsConnectModalOpen(false)
+        showAlert(
+          `Connected wallet ${addr.slice(0, 6)}...${addr.slice(-4)}`,
+          'success'
+        )
+      } else {
+        showAlert('No account returned from wallet.', 'warning')
+      }
+    } catch (err) {
+      console.error(err)
+      if (err.code === 4001) {
+        showAlert('Connection request was rejected.', 'info')
+      } else {
+        showAlert('Failed to connect wallet.', 'danger')
+      }
+    } finally {
+      setIsConnecting(false)
+    }
+  }
+  // Hàm disconnect ví
+  const disconnectWallet = () => {
+    setConnectedWallet(null)
+    setIsDisconnectModalOpen(false)
+    showAlert('Disconnected wallet.', 'info')
+  }
+
+  useEffect(() => {
+    const eth = window.ethereum
+    if (!eth || !eth.request) return
+
+    const loadAccounts = async () => {
+      try {
+        const accounts = await eth.request({ method: 'eth_accounts' })
+        const addr = accounts?.[0] || null
+        if (addr) setConnectedWallet(addr)
+      } catch (err) {
+        console.error('Failed to load accounts', err)
+      }
+    }
+
+    loadAccounts()
+
+    const handler = (accounts) => {
+      const addr = accounts?.[0] || null
+      setConnectedWallet(addr)
+    }
+
+    eth.on?.('accountsChanged', handler)
+    return () => eth.removeListener?.('accountsChanged', handler)
+  }, [])
+
+
+
+
 
   // ===== SEARCH / CALL BACKEND =====
   const searchWallet = async (address, network) => {
@@ -158,6 +294,8 @@ function App() {
         lowRiskApprovals: res.low_risk_approvals ?? 0,
         priceChange: res.price_change ?? null,
         fairPrice: res.fair_price ?? null,
+        detectionMode: res.detection_mode,
+        blacklist: res.blacklist || null,
         raw: res,
       }
 
@@ -262,20 +400,48 @@ function App() {
 
   const { title, subtitle } = PAGE_META[activePage] ?? PAGE_META.wallet
 
-  
+  // ===== THEME HANDLING =====
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))
+  }
 
   return (
     <div className="container">
-      <Sidebar activePage={activePage} onChangePage={setActivePage} />
+      <Sidebar 
+        activePage={activePage} 
+        onChangePage={setActivePage}         
+        theme={theme}                     // 👈 truyền theme xuống
+        onToggleTheme={toggleTheme} />
 
       <main className="main-content">
         <Header
           onFavorite={() => walletData && toggleFavorite(walletData.address)}
-          onConnectWallet={connectWallet}
+          onConnectWallet={handleHeaderConnectClick}
           walletAddress={connectedWallet}
+          isConnecting={isConnecting}  
           pageTitle={title}
           pageSubtitle={subtitle}
         />
+
+        <ConnectWalletModal
+          isOpen={isConnectModalOpen}
+          onClose={() => setIsConnectModalOpen(false)}
+          onSelectWallet={connectWithWallet}
+          isConnecting={isConnecting}
+        />
+
+        <DisconnectWalletModal
+          isOpen={isDisconnectModalOpen}
+          onClose={() => setIsDisconnectModalOpen(false)}
+          onConfirm={disconnectWallet}
+          walletAddress={connectedWallet}
+        />
+
 
         {renderPage()}
       </main>

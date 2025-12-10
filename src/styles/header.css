@@ -85,3 +85,10 @@
     justify-content: space-between;
   }
 }
+
+.btn-connect--connected {
+  background: #212529;
+  border: 1px solid #ffc107;
+  color: #ffc107;
+}
+

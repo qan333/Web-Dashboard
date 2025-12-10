@@ -1,8 +1,25 @@
+/* Base */
 .search-section {
+  width: 100%;
+}
+
+/* Mặc định: có nền (card) – dùng cho đa số page */
+.search-section--card {
   padding: 1.5rem 2rem;
   background: var(--bg-secondary);
 }
 
+/* Mode phẳng: không nền – dùng cho Wallet scoring */
+.search-section--flat {
+  padding: 0.75rem 0 0;   /* tuỳ chỉnh, có thể để 0 */
+  background: transparent;
+}
+
+.search-section--flat .search-box-container {
+  margin-bottom: 0;             /* trước đây là 0.25rem / 1rem */
+}
+
+/* Phần còn lại giữ nguyên */
 .search-box-container {
   display: flex;
   gap: 1rem;

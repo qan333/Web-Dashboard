@@ -1,32 +1,35 @@
 // src/components/Sidebar.jsx
-import { useState } from 'react'
-import logoImage from '../assets/logo.png';
+import logoImage from '../assets/logo.png'
 import '../styles/sidebar.css'
 
-export default function Sidebar({ activePage, onChangePage }) {
-  const [theme, setTheme] = useState(false)
+export default function Sidebar({
+  activePage,
+  onChangePage,
+  theme,          // <-- nhận theme từ App
+  onToggleTheme,  // <-- nhận hàm toggle từ App
+}) {
+  const isLight = theme === 'light'
 
-  // CHÚ Ý: id phải trùng với các case trong App.jsx: wallet, approval, tx-monitor, alerts
   const navItems = [
     { id: 'wallet', label: 'Wallet scoring', icon: 'wallet' },
     { id: 'approval', label: 'Approval audit', icon: 'check' },
     { id: 'tx-monitor', label: 'Transaction monitor', icon: 'transaction' },
-    { id: 'alerts', label: 'Alert tracker', icon: 'alert' }
+    { id: 'alerts', label: 'Alert tracker', icon: 'alert' },
   ]
 
   const footerItems = [
     { label: 'Onboarding', icon: 'onboarding' },
-    { label: 'Dashboard wiki', icon: 'wiki' }
+    { label: 'Dashboard wiki', icon: 'wiki' },
   ]
 
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="logo-box">
-          <img 
-            src={logoImage} 
-            alt="Logo ScamRadar" 
-            className="logo-icon" 
+          <img
+            src={logoImage}
+            alt="Logo ScamRadar"
+            className="logo-icon"
           />
         </div>
         <span className="sidebar-title">Scam Radar</span>
@@ -62,10 +65,11 @@ export default function Sidebar({ activePage, onChangePage }) {
         <div className="theme-toggle">
           <span>Light mode</span>
           <button
-            className={`toggle-switch ${theme ? 'active' : ''}`}
-            onClick={() => setTheme(!theme)}
+            type="button"
+            className={`toggle-switch ${isLight ? 'active' : ''}`}
+            onClick={onToggleTheme}
           >
-            <span className="toggle-circle"></span>
+            <span className="toggle-circle" />
           </button>
         </div>
       </div>

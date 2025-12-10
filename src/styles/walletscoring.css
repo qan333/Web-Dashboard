@@ -1,0 +1,119 @@
+/* ===== Layout 2 cột mặc định: Health/Toxic + Alert (khi CÓ alert) ===== */
+.wallet-scoring-page .content-wrapper {
+  display: grid;
+  grid-template-columns: minmax(0, 640px) minmax(320px, 1fr);
+  gap: 1.5rem;              
+  margin-top: 0;            
+}
+
+.wallet-scoring-page .left-column {
+  width: 100%;
+}
+
+.wallet-scoring-page .right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Alert card styling */
+.wallet-scoring-page .card-scam-alert {
+  background: linear-gradient(135deg, #3b1118 0%, #641220 100%);
+  border: 1px solid rgba(255, 76, 76, 0.6);
+  color: #ffecec;
+  padding: 1.5rem;
+  border-radius: 16px;
+}
+
+.wallet-scoring-page .card-scam-alert-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.wallet-scoring-page .card-scam-alert-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.wallet-scoring-page .alert-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: #ff1744;
+  color: #fff;
+  letter-spacing: 0.06em;
+}
+
+.wallet-scoring-page .card-scam-alert-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-bottom: 1rem;
+}
+
+.wallet-scoring-page .card-scam-alert-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.wallet-scoring-page .alert-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.wallet-scoring-page .alert-row span {
+  opacity: 0.85;
+}
+
+.wallet-scoring-page .alert-row-multiline {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.wallet-scoring-page .sources-list {
+  font-family: monospace;
+  font-size: 0.8rem;
+  opacity: 0.9;
+  word-break: break-all;
+}
+
+/* ===== Layout 1 cột: khi KHÔNG có scam alert ===== */
+.wallet-scoring-page .content-wrapper--single {
+  display: flex;
+  width: 100%;
+  margin-top: 0;
+}
+
+.wallet-scoring-page .content-wrapper--single .left-column {
+  flex: 1 1 auto;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.wallet-scoring-page
+  .content-wrapper--single
+  .left-column
+  > .card,
+.wallet-scoring-page
+  .content-wrapper--single
+  .left-column
+  > .card-health-overview,
+.wallet-scoring-page
+  .content-wrapper--single
+  .left-column
+  > .card.card-health-overview {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Giảm khoảng cách giữa search và card bên dưới */
+.wallet-scoring-page .wallet-search-row {
+  padding: 0.35rem 2rem 0;
+  margin: 0;
+}

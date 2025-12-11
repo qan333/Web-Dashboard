@@ -35,6 +35,16 @@ async function get(path) {
  * Backend: POST /detect/account  
  */
 export function detectAccount(accountAddress, options = {}) {
+  return post("/detect/account", {
+    account_address: accountAddress,
+    explain: true,
+    explain_with_llm: true,
+    max_transactions: 1000,
+    ...options,
+  });
+}
+
+export function detectAccountBlacklist(accountAddress, options = {}) {
   return post("/detect-bl/account", {
     account_address: accountAddress,
     explain: true,

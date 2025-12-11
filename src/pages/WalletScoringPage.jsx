@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import SearchSection from '../components/SearchSection'
 import HealthOverview from '../components/HealthOverview'
-import ScamAlertCard from '../components/ScamAlertCard'
 import '../styles/walletscoring.css'
 
 export default function WalletScoringPage({
@@ -16,11 +15,6 @@ export default function WalletScoringPage({
   const toxicScore = walletData?.toxicScore
   const riskLevel = walletData?.riskLevel
 
-  const showAlert =
-    walletData?.blacklist?.is_scam === true ||
-    (walletData?.detectionMode &&
-      walletData.detectionMode.startsWith('blacklist'))
-
   return (
     <div className="wallet-scoring-page">
       {/* Wrapper riêng cho search để dễ chỉnh khoảng cách */}
@@ -29,15 +23,12 @@ export default function WalletScoringPage({
           onSearch={onSearchWallet}
           loading={loading}
           defaultWalletAddress={defaultWalletAddress}
-          variant="flat" 
+          variant="flat"
         />
       </div>
 
-      <div
-        className={`content-wrapper ${
-          showAlert ? '' : 'content-wrapper--single'
-        }`}
-      >
+      {/* Luôn dùng layout single column vì đã bỏ ScamAlertCard */}
+      <div className="content-wrapper content-wrapper--single">
         <div className="left-column">
           <div className="tabs">
             <button
@@ -91,15 +82,6 @@ export default function WalletScoringPage({
             </section>
           )}
         </div>
-
-        {showAlert && (
-          <div className="right-column">
-            <ScamAlertCard
-              blacklist={walletData?.blacklist}
-              detectionMode={walletData?.detectionMode}
-            />
-          </div>
-        )}
       </div>
     </div>
   )

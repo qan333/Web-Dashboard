@@ -173,3 +173,135 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
+.status-cell {
+  font-weight: 500;
+}
+
+.status-cell--danger {
+  color: #ff4d4f; /* đỏ nổi trên nền dark */
+}
+
+.etherscan-link {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* cho card cảm giác “to” hơn theo chiều dọc */
+.alert-tracker-page .card-alert-tracker {
+  min-height: 420px;
+}
+
+/* căn giữa cột View on Etherscan */
+.report-table th.view-col,
+.report-table td.view-col {
+  text-align: center;
+}
+
+/* nút View dạng pill, nổi hơn */
+.etherscan-link-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid var(--primary-color, #00e0ff);
+  color: var(--primary-color, #00e0ff);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.etherscan-link-btn:hover {
+  background: var(--primary-color, #00e0ff);
+  color: #020617; /* nền tối bên trong nút */
+  transform: translateY(-1px);
+}
+
+/* ===== Modal alert cho Alert tracker ===== */
+
+.alert-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50; /* trên card & sidebar */
+}
+
+.alert-modal {
+  background: #020617;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  max-width: 420px;
+  width: calc(100% - 2rem);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.alert-modal--clean {
+  border-color: var(--primary-color, #00e0ff);
+}
+
+.alert-modal--danger {
+  background: radial-gradient(circle at top, #641220, #21040a 60%);
+  border-color: #ff4d4f;
+}
+
+.alert-modal--neutral {
+  border-color: rgba(148, 163, 184, 0.6);
+}
+
+.alert-modal-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.alert-modal-address {
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.alert-modal-address .monospace {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.alert-modal-status,
+.alert-modal-source {
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+}
+
+.alert-modal-status strong {
+  font-weight: 600;
+}
+
+.alert-modal-actions {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.alert-modal-btn {
+  padding: 0.4rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--primary-color, #00e0ff);
+  color: #020617;
+  transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.alert-modal-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
